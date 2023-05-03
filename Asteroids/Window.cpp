@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "StateManager.hpp"
 
 Window::Window(const std::string& title, const sf::Vector2i& windowSize)
 	: m_EventManager()
@@ -7,11 +8,10 @@ Window::Window(const std::string& title, const sf::Vector2i& windowSize)
 		sf::VideoMode(windowSize.x, windowSize.y, 32), title
 	);
 
-	m_EventManager.RegisterBinding("Close_Window", EventType::Closed, 0);
-	m_EventManager.RegisterCallback<Window>("Close_Window", &Window::CloseWindow, this);
+	m_EventManager.SetCurrentState(StateType::Intro);
 
-	m_EventManager.RegisterBinding("Fullscreen", EventType::KeyDown, sf::Keyboard::F5);
-	m_EventManager.RegisterCallback<Window>("Fullscreen", &Window::SetFullScreen, this);
+	m_EventManager.RegisterBinding("Close_Window", EventType::Closed, 0);
+	m_EventManager.RegisterCallback<Window>(StateType(0), "Close_Window", &Window::CloseWindow, this);
 }
 
 void Window::UpdateEvents()

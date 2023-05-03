@@ -1,10 +1,17 @@
 #include "EventManager.hpp"
 
-EventManager::EventManager() /*: m_Window(window)*/ {}
+EventManager::EventManager() 
+	: m_CurrentState(StateType(0))
+{}
 
 void EventManager::RegisterBinding(const std::string& name, EventType type, int keyCode)
 {
 	m_Bindings[name] = { type, keyCode };
+}
+
+void EventManager::SetCurrentState(StateType stateType)
+{
+	m_CurrentState = stateType;
 }
 
 void EventManager::UpdateRealTime()
@@ -17,7 +24,10 @@ void EventManager::UpdateRealTime()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(binding.keyCode)))
 			{
 				const auto callbackItr = m_Callbacks.find(bItr.first);
-				callbackItr->second(Event());
+				if (m_CurrentState == callbackItr->second.first || callbackItr->second.first == StateType(0))
+				{
+					callbackItr->second.second(Event());
+				}
 			}
 		}
 		else if (binding.eventType == EventType::Mouse) 
@@ -25,10 +35,13 @@ void EventManager::UpdateRealTime()
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Button(binding.keyCode)))
 			{
 				const auto callbackItr = m_Callbacks.find(bItr.first);
-				Event ev;
-				//ev.mousePos = sf::Mouse::getPosition(m_Window.GetRenderWindow());
-				ev.keyCode = binding.keyCode;
-				callbackItr->second(ev);
+				if (m_CurrentState == callbackItr->second.first || callbackItr->second.first == StateType(0))
+				{
+					Event ev;
+					//ev.mousePos = sf::Mouse::getPosition(m_Window.GetRenderWindow());
+					ev.keyCode = binding.keyCode;
+					callbackItr->second.second(ev);
+				}
 			}
 		}
 	}
@@ -55,7 +68,10 @@ void EventManager::UpdatePoll(const sf::Event& event)
 				ev.keyCode = bItr.second.keyCode;
 			}
 			const auto callbackItr = m_Callbacks.find(bItr.first);
-			callbackItr->second(ev);
+			if (m_CurrentState == callbackItr->second.first || callbackItr->second.first == StateType(0))
+			{
+				callbackItr->second.second(ev);
+			}
 		}
 	}
 }

@@ -154,11 +154,19 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="StateGame.cpp" />
+    <ClCompile Include="StateIntro.cpp" />
+    <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseState.hpp" />
     <ClInclude Include="EventManager.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="SharedContext.hpp" />
+    <ClInclude Include="StateGame.hpp" />
+    <ClInclude Include="StateIntro.hpp" />
+    <ClInclude Include="StateManager.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

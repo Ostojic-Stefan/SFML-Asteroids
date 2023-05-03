@@ -37,23 +37,26 @@ struct Event
 
 using CallbackType = std::function<void(const Event&)>;
 
+enum class StateType;
+
 class EventManager
 {
 public:
 	EventManager();
 	void RegisterBinding(const std::string& name, EventType type, int keyCode);
-	
+	void SetCurrentState(StateType stateType);
+
 	template<class T>
-	void RegisterCallback(const std::string& name, void(T::*func)(const Event&), T* instance)
+	void RegisterCallback(StateType stateType, const std::string& name, void(T::*func)(const Event&), T* instance)
 	{
 		CallbackType callback = std::bind(func, instance, std::placeholders::_1);
-		m_Callbacks[name] = callback;
+		m_Callbacks[name] = std::make_pair(stateType, callback);
 	}
 
 	void UpdateRealTime();
 	void UpdatePoll(const sf::Event& event);
 private:
-	//Window& m_Window;
+	StateType m_CurrentState;
 	std::unordered_map<std::string, Binding> m_Bindings;
-	std::unordered_map<std::string, CallbackType> m_Callbacks;
+	std::unordered_map<std::string, std::pair<StateType, CallbackType>> m_Callbacks;
 };
