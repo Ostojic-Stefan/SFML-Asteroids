@@ -163,6 +163,7 @@
     <ClInclude Include="BaseState.hpp" />
     <ClInclude Include="EventManager.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="ResourceManager.hpp" />
     <ClInclude Include="SharedContext.hpp" />
     <ClInclude Include="StateGame.hpp" />
     <ClInclude Include="StateIntro.hpp" />
