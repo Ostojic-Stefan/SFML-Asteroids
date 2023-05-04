@@ -26,6 +26,10 @@ public:
 
 	bool RemoveState(StateType stateType);
 	void SwitchTo(StateType stateType);
+	SharedContext* GetContext()
+	{
+		return m_SharedContext;
+	}
 private:
 	template<class T> 
 	void RegisterState(StateType stateType)

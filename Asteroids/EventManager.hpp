@@ -26,6 +26,7 @@ enum class EventType
 struct Binding 
 {
 	EventType eventType;
+	bool run = false;
 	int keyCode;
 };
 

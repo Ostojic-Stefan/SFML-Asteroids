@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseState.hpp"
+#include "EventManager.hpp"
 
 class StateGame : public BaseState
 {
@@ -15,4 +16,8 @@ public:
 
 	virtual void Draw() override;
 
+private:
+	void MovePlayer(const Event& event);
+private:
+	sf::Sprite m_PlayerSprite;
 };

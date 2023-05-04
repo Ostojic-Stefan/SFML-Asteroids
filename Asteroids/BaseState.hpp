@@ -14,6 +14,6 @@ public:
 
 	virtual void Update(const sf::Time& time) = 0;
 	virtual void Draw() = 0;
-private:
+protected:
 	StateManager* m_StateManager;
 };

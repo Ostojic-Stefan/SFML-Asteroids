@@ -15,11 +15,15 @@ public:
 	void BeginDraw();
 	void Draw(const sf::Drawable& drawable);
 	void EndDraw();
-	const sf::RenderWindow& GetRenderWindow() const {
-		return m_Window;
+	sf::RenderWindow* GetRenderWindow() {
+		return &m_Window;
 	}
 	sf::Vector2u GetSize() const;
 	void SetFullScreen(const Event& ev);
+	EventManager* GetEventManager()
+	{
+		return &m_EventManager;
+	}
 private:
 	void CloseWindow(const Event& ev);
 private:

@@ -8,8 +8,6 @@ Window::Window(const std::string& title, const sf::Vector2i& windowSize)
 		sf::VideoMode(windowSize.x, windowSize.y, 32), title
 	);
 
-	m_EventManager.SetCurrentState(StateType::Intro);
-
 	m_EventManager.RegisterBinding("Close_Window", EventType::Closed, 0);
 	m_EventManager.RegisterCallback<Window>(StateType(0), "Close_Window", &Window::CloseWindow, this);
 }

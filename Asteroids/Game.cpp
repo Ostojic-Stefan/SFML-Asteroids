@@ -2,20 +2,18 @@
 #include <functional>
 
 Game::Game()
-	: m_Window(new Window("Asteroids"))
+	: 
+	m_Window(new Window("Asteroids")),
+	m_TextureManager("textures.cfg"),
+	m_FontManager("fonts.cfg"),
+	m_StateManager(&m_SharedContext)
 {
-	shape.setFillColor(sf::Color::Green);
-	shape.setSize({ 100.0f, 100.0f });
+	m_SharedContext.window = m_Window;
+	m_SharedContext.eventManager = m_Window->GetEventManager();
+	m_SharedContext.textureManager = &m_TextureManager;
+	m_SharedContext.fontManager= &m_FontManager;
 
-	auto bounds = shape.getLocalBounds();
-	shape.setOrigin(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
-	shape.setPosition(m_Window->GetSize().x / 2.0f, m_Window->GetSize().y / 2.0f);
-
-	//m_EventManager.RegisterBinding("LeftButton", EventType::Keyboard, sf::Keyboard::Left);
-	//m_EventManager.RegisterCallback<Game>("LeftButton", &Game::MoveShape, this);
-
-	//m_EventManager.RegisterBinding("MouseLeft", EventType::Mouse, sf::Mouse::Left);
-	//m_EventManager.RegisterCallback<Game>("MouseLeft", &Game::MoveShapeMouse, this);
+	m_StateManager.SwitchTo(StateType::Intro);
 }
 
 Game::~Game()
@@ -26,12 +24,14 @@ Game::~Game()
 void Game::Update()
 {
 	m_Window->UpdateEvents();
+	m_StateManager.Update(m_Elapsed);
+	m_Elapsed = m_Clock.restart();
 }
 
 void Game::Render()
 {
 	m_Window->BeginDraw();
-	m_Window->Draw(shape);
+	m_StateManager.Draw();
 	m_Window->EndDraw();
 }
 
@@ -49,6 +49,5 @@ void Game::MoveShapeMouse(const Event& event)
 {
 	std::cout << event.mousePos.x << std::endl;
 	std::cout << event.mousePos.y << std::endl;
-	shape.setPosition(static_cast<sf::Vector2f>(event.mousePos));
 }
 

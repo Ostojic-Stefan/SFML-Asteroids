@@ -6,7 +6,7 @@ EventManager::EventManager()
 
 void EventManager::RegisterBinding(const std::string& name, EventType type, int keyCode)
 {
-	m_Bindings[name] = { type, keyCode };
+	m_Bindings[name] = { type, false, keyCode };
 }
 
 void EventManager::SetCurrentState(StateType stateType)
@@ -54,24 +54,39 @@ void EventManager::UpdatePoll(const sf::Event& event)
 		Binding& binding = bItr.second;
 		EventType sfmlEvent = static_cast<EventType>(event.type);
 
+		// Checks for the sfml event
+		// sf::KeyDown
 		if (binding.eventType == sfmlEvent) 
 		{
 			Event ev;
 			if (sfmlEvent == EventType::MButtonDown || sfmlEvent == EventType::MButtonUp)
 			{
+				if (event.key.code == binding.keyCode)
+				{
+					binding.run = true;
+				}
 				ev.mousePos.x = event.mouseButton.x;
 				ev.mousePos.y = event.mouseButton.y;
 				ev.keyCode = bItr.second.keyCode;
 			}
-			if (sfmlEvent == EventType::KeyDown || sfmlEvent == EventType::KeyUp)
+			else if (sfmlEvent == EventType::KeyDown || sfmlEvent == EventType::KeyUp)
 			{
+				if (event.key.code == binding.keyCode)
+				{
+					binding.run = true;
+				}
 				ev.keyCode = bItr.second.keyCode;
 			}
+			else
+			{
+				binding.run = true;
+			}
 			const auto callbackItr = m_Callbacks.find(bItr.first);
-			if (m_CurrentState == callbackItr->second.first || callbackItr->second.first == StateType(0))
+			if (binding.run && (m_CurrentState == callbackItr->second.first || callbackItr->second.first == StateType(0)))
 			{
 				callbackItr->second.second(ev);
 			}
+			binding.run = false;
 		}
 	}
 }

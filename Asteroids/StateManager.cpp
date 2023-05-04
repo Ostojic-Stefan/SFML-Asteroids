@@ -11,7 +11,7 @@ void StateManager::Update(const sf::Time& dt)
 {
 	if (m_States.empty()) return;
 	std::unique_ptr<BaseState>& stateToUpdate = m_States.back().second;
-	stateToUpdate->Update(sf::Time());
+	stateToUpdate->Update(dt);
 }
 
 void StateManager::Draw()
@@ -42,7 +42,7 @@ void StateManager::SwitchTo(StateType stateType)
 			std::unique_ptr<BaseState> tmpState = std::move(itr->second);
 			m_States.erase(itr);
 			m_States.emplace_back(tmpType, std::move(tmpState));
-			//m_States.back().second->Activate();
+			m_States.back().second->OnCreate();
 			return;
 		}
 	}
