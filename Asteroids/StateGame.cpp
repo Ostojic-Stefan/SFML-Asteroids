@@ -11,8 +11,10 @@ void StateGame::OnCreate()
 {
 	EventManager* evMgr = m_StateManager->GetContext()->eventManager;
 	evMgr->SetCurrentState(StateType::Game);
-	evMgr->RegisterBinding("MovePlayer", EventType::Keyboard, sf::Keyboard::Right);
+	evMgr->RegisterBinding("MovePlayer", EventType::Keyboard, sf::Keyboard::W);
 	evMgr->RegisterCallback(StateType::Game, "MovePlayer", &StateGame::MovePlayer, this);
+	evMgr->RegisterBinding("RotatePlayer", EventType::Keyboard, sf::Keyboard::R);
+	evMgr->RegisterCallback(StateType::Game, "RotatePlayer", &StateGame::RotatePlayer, this);
 
 	ResourceManager<sf::Texture>* textureManager = m_StateManager->GetContext()->textureManager;
 	textureManager->RequireResource("PlayerSprite");
@@ -34,7 +36,6 @@ void StateGame::OnDestroy()
 
 void StateGame::Update(const sf::Time& time)
 {
-	std::cout << "Game Running " << time.asSeconds() << std::endl;
 }
 
 void StateGame::Draw()
@@ -45,7 +46,17 @@ void StateGame::Draw()
 
 void StateGame::MovePlayer(const Event& event)
 {
-	m_PlayerSprite.move({ 2.0f, 0.0f });
+	sf::Vector2f velocity = m_Direction * 0.1f;
+	m_PlayerSprite.move(velocity);
+}
+
+void StateGame::RotatePlayer(const Event& event)
+{
+	m_CurrentRotation += DegToRad(1.0f);
+	m_PlayerSprite.rotate(1.0f);
+	float angle = DegToRad(m_PlayerSprite.getRotation()) - (M_PI / 2.0f);
+	m_Direction = sf::Vector2f(std::cos(angle), std::sin(angle));
+
 }
 
 
